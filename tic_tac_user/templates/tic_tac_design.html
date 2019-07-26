@@ -1,0 +1,154 @@
+<html>
+    <head>
+       <!-- jQuery library -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
+        <style>
+            body{
+            background: #212121;
+            color: #666;
+          }
+          h1{
+            text-align: center;
+            color: #fff;
+          }
+          .clearfix{
+            clear: both;
+          }
+          #box{
+            width: 350px;
+            overflow: auto;
+            margin: 40px auto;
+            background: #666;
+            padding-bottom: 40px;
+            border-radius: 10px;
+          }
+          #message{
+            background: #333;
+            color: #fff;
+          }
+          #gameBoard li{
+            float: left;
+            margin: 10px;
+            height: 70px;
+            width: 70px;
+            font-size: 50px;
+            background: #333;
+            color: #ccc;
+            list-style: none;
+            text-align: center;
+            border-radius: 5px;
+          }
+          #gameBoard li:hover, #reset:hover{
+            cursor: pointer;
+            background: #000;
+          }
+          .tic_tac_buttons{
+            width: 70;
+            height: 70;
+          }
+          #reset{
+            border: 0;
+            background: #444;
+            color: #fff;
+            width: 70%;
+            padding: 15px;
+            border-radius: 5px;
+          }
+          .o{
+            color: green !important;
+          }
+          .x{
+            color: red !important;
+          }
+          footer{
+            display: block;
+            text-align: center;
+            padding-top: 20px;
+          }
+        </style>
+    </head> 
+    <body>
+        <div class="text-center"id="box">
+            <header>
+                <h1>Play Tic Tac Toe</h1>
+            </header>
+            <div id="message"></div>
+            <form style="margin-left: 67px;">
+                <button type="button" id="loc_1" onclick="button_click(id)" class='tic_tac_buttons'>
+                _</button>
+                <button type="button" id="loc_2" onclick="button_click(id)" class='tic_tac_buttons'>
+                _</button>
+                <button type="button" id="loc_3" onclick="button_click(id)" class='tic_tac_buttons'>   
+                _</button><br>
+                <button type="button" id="loc_4" onclick="button_click(id)" class='tic_tac_buttons'>   
+                _</button>
+                <button type="button" id="loc_5" onclick="button_click(id)" class='tic_tac_buttons'>   
+                _</button>
+                <button type="button" id="loc_6" onclick="button_click(id)" class='tic_tac_buttons'>    
+                _</button><br>
+                <button type="button" id="loc_7" onclick="button_click(id)" class='tic_tac_buttons'>
+                _</button>
+                <button type="button" id="loc_8" onclick="button_click(id)" class='tic_tac_buttons'>   
+                _</button>
+                <button type="button" id="loc_9" onclick="button_click(id)" class='tic_tac_buttons'>  
+                _</button>
+            </form>
+        <div class="clearfix"></div>
+            <footer>
+                <button id="reset">Reset</button>
+            </footer>
+        </div>
+        <script>
+           var player_choice;
+        
+        $(document).ready(function(){
+          while(!player_choice){
+          player_choice = prompt("Please choose 'X' or '0'"); 
+          // console.log(player_choice)
+          if (player_choice == '' || player_choice == null)
+          {
+            alert('Sorry! please enter some input');
+          } 
+          
+          }
+        }); 
+
+        function button_click(id){
+              // console.log(player_choice); 
+            $("#"+id).html(player_choice.toUpperCase());
+            $("#"+id).attr("disabled", true);
+            if (player_choice.toUpperCase() == 'X'){
+              player_choice='0'
+            }
+            else{
+               player_choice='X'
+            }
+            var value = $("#"+id).html();
+            console.log(value)
+            $.ajax({
+                  "url": "{% url 'tic_tac_toe' %}",
+                  "dataType": "json",
+                  data: 
+                  { 
+                    'Value' : value,
+                    'Id'  : id
+                  },
+                  success: function( msg ){
+                    console.log(msg)
+                    if (msg!=''){
+                     alert(msg) 
+                      $(".tic_tac_buttons").attr("disabled", true);
+                    
+                    }
+                    }
+              });     
+        }
+
+        $("#reset").click(function(e) {
+          player_choice = prompt("Please choose 'X' or '0'"); 
+          $(".tic_tac_buttons").html('_');
+          $(".tic_tac_buttons").attr("disabled", false); 
+        });
+        </script>
+    </body>
+</html>
